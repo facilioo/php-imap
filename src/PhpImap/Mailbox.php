@@ -510,6 +510,9 @@ class Mailbox
      */
     public function decodeStringFromUtf7ImapToUtf8(string $str): string
     {
+
+		if(empty(mb_detect_encoding($str))) return $str;
+
         $out = imap_utf7_decode($str);
 
         if (!\is_string($out)) {
