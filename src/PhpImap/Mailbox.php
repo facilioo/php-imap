@@ -744,9 +744,9 @@ class Mailbox
      *
      * @see imap_delete()
      */
-    public function deleteMail(int $mailId): void
+    public function deleteMail(int $mailId): bool
     {
-        Imap::delete($this->getImapStream(), $mailId, (SE_UID === $this->imapSearchOption) ? FT_UID : 0);
+        return Imap::delete($this->getImapStream(), $mailId, (SE_UID === $this->imapSearchOption) ? FT_UID : 0);
     }
 
     /**
@@ -757,10 +757,11 @@ class Mailbox
      *
      * @see imap_mail_move()
      */
-    public function moveMail($mailId, string $mailBox): void
+    public function moveMail($mailId, string $mailBox): bool
     {
-        Imap::mail_move($this->getImapStream(), $mailId, $mailBox, CP_UID);
+        $result = Imap::mail_move($this->getImapStream(), $mailId, $mailBox, CP_UID);
         $this->expungeDeletedMails();
+		return $result;
     }
 
     /**
