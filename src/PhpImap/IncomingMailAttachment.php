@@ -128,11 +128,18 @@ class IncomingMailAttachment
      *
      * @psalm-param fileinfoconst $fileinfo_const
      */
-    public function getFileInfo(int $fileinfo_const = FILEINFO_NONE): string
+    public function getFileInfo($fileinfo_const = FILEINFO_NONE): string
     {
+        if ((FILEINFO_MIME == $fileinfo_const) and (false != $this->mimeType)) {
+            return $this->mimeType;
+        }
+
         $finfo = new finfo($fileinfo_const);
 
-        return $finfo->buffer($this->getContents());
+        if (!($ftype = $finfo->buffer($this->getContents()))) {
+            $ftype = 'unknown';
+        }
+        return $ftype;
     }
 
     /**
